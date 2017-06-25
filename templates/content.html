@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+    <nav class="red lighten-1" role="navigation" xmlns="http://www.w3.org/1999/html">
+        <div class="nav-wrapper container"><a id="logo-container" class="brand-logo center">{{ channel_name }}</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="section">
+            {% if not contents %}
+                <h1>No contents to show</h1>
+            {% else %}
+                {% for con in contents %}
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="card white darken-1">
+                                <div class="card-content grey-text">
+                                    <span class="card-title">{{ con.title }}</span>
+                                    <p>
+                                        {% for key, value in con.metadata.items %}
+                                            {{ key }}: {{ value }}<br/>
+                                        {% endfor %}
+                                    </p>
+                                </div>
+                                <div class="card-action">
+                                    <a href="{{ con.file.url }}">Ver contenido</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}
