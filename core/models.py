@@ -24,7 +24,7 @@ class Channel(models.Model):
 
     title = models.CharField(max_length=50, null=False, blank=False, unique=True)
     language = models.CharField(max_length=2, null=False, blank=False, default='ES')
-    picture = models.ImageField(null=False, blank=False, upload_to=image_path)
+    picture = models.ImageField(null=False, blank=False, upload_to=image_path, default='channel_files/default.png')
     parent_channel = models.ForeignKey(
         'self',
         on_delete=models.SET(get_default_channel),
@@ -54,15 +54,15 @@ class Content(models.Model):
     channel = models.ForeignKey(
         Channel,
         on_delete=models.SET(get_default_channel),
-        null=False,
-        default=get_default_channel
+        null=False
     )
     file = models.FileField(null=False, blank=False, upload_to=content_path)
 
     def save(self, **kwargs):
         super(Content, self).save(**kwargs)
-        rating = Rating.objects.create(content=self)
-        rating.save()
+        rating, created = Rating.objects.get_or_create(content=self)
+        if created:
+            rating.save()
 
     def __str__(self):
         return self.title
@@ -73,6 +73,3 @@ class Rating(models.Model):
     count = models.PositiveIntegerField(default=0)
     average = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal(0.0))
     content = models.OneToOneField(Content, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.content.title + ' content rating: ' + str(self.average)
