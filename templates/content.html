@@ -3,7 +3,15 @@
 
 {% block content %}
     <nav class="red lighten-1" role="navigation" xmlns="http://www.w3.org/1999/html">
-        <div class="nav-wrapper container"><a id="logo-container" class="brand-logo center">{{ channel_name }}</a>
+        <div class="nav-wrapper container">
+            <a id="logo-container" class="brand-logo center">{{ channel.title }}</a>
+            <ul class="left hide-on-med-and-down">
+                {% if channel.parent_channel %}
+                    <li><a href="/channels/{{ channel.parent_channel.id }}"><i class="material-icons">arrow_back</i></a></li>
+                {% else %}
+                    <li><a href="/channels"><i class="material-icons">home</i></a></li>
+                {% endif %}
+            </ul>
         </div>
     </nav>
 
@@ -22,6 +30,7 @@
                                         {% for key, value in con.metadata.items %}
                                             {{ key }}: {{ value }}<br/>
                                         {% endfor %}
+                                        Rate (out of 10): {{ con.rating.average }}
                                     </p>
                                 </div>
                                 <div class="card-action">

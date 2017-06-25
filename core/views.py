@@ -24,20 +24,26 @@ class Channels(View):
         if not channel_id:
             channels = Channel.objects.filter(parent_channel=None).exclude(title='deleted')
             channel_name = 'All channels'
+            current_channel = False
 
         else:
             try:
-                parent = Channel.objects.get(id=channel_id)
+                current_channel = Channel.objects.get(id=channel_id)
 
             except Channel.DoesNotExist:
                 return HttpResponseNotFound('<h1>Channel not found<h1>')
 
-            channels = Channel.objects.filter(parent_channel=parent)
-            channel_name = parent.title
+            channels = Channel.objects.filter(parent_channel=current_channel)
+            channel_name = current_channel.title
+            current_channel = current_channel.parent_channel
             if not channels:
                 return redirect('/channels/' + str(channel_id) + '/content')
 
-        return render(request, self.template_name, {'channels': channels, 'channel_name': channel_name})
+        return render(
+            request,
+            self.template_name,
+            {'channels': channels, 'channel_name': channel_name, 'current': current_channel}
+        )
 
 
 class Contents(View):
@@ -61,6 +67,6 @@ class Contents(View):
 
         contents = Content.objects.filter(channel=channel)
 
-        return render(request, self.template_name, {'contents': contents, 'channel_name': channel.title})
+        return render(request, self.template_name, {'contents': contents, 'channel': channel})
 
 

@@ -3,7 +3,16 @@
 
 {% block content %}
     <nav class="red lighten-1" role="navigation">
-        <div class="nav-wrapper container"><a id="logo-container" class="brand-logo center">{{ channel_name }}</a></div>
+        <div class="nav-wrapper container">
+            <a id="logo-container" class="brand-logo center">{{ channel_name }}</a>
+            <ul class="left hide-on-med-and-down">
+                {% if current %}
+                    <li><a href="/channels/{{ current.id }}"><i class="material-icons">arrow_back</i></a></li>
+                {% else %}
+                    <li><a href="/channels"><i class="material-icons">home</i></a></li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
 
     <div class="container">
