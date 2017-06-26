@@ -23,4 +23,5 @@ class Command(BaseCommand):
             writer = csv.writer(channels_csv)
             writer.writerow(["Channel Title", "Average Rating"])
             for title, vals in rats:
+                self.stdout.write(title+': '+str(vals[0].quantize(TWOPLACES)))
                 writer.writerow([title, vals[0].quantize(TWOPLACES)])
