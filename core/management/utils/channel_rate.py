@@ -20,13 +20,15 @@ def rate_channels(channels: [Channel]) -> [(str, Decimal)]:
 
             if not subch:
                 for cont in chan.content_set.all():
-                    avg = add_averages(avg, count, cont.rating.average, cont.rating.count)
-                    count += cont.rating.count
+                    if cont.rating.count > 0:
+                        avg = add_averages(avg, count, cont.rating.average, cont.rating.count)
+                        count += cont.rating.count
 
-            for subch in subch:
-                avg2, count2 = get_rating(subch)
-                avg = add_averages(avg, count, avg2, count2)
-                count += count2
+            for sub in subch:
+                avg2, count2 = get_rating(sub)
+                if count2 > 0:
+                    avg = add_averages(avg, count, avg2, count2)
+                    count += count2
 
             rats[chan.title] = (avg, count)
 
